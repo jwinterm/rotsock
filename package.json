@@ -1,0 +1,10 @@
+{
+  "name": "rotsock",
+  "version": "0.0.1",
+  "description": "my first socket.io app",
+  "dependencies": {
+    "express": "^4.10.2",
+    "rot-js": "^0.6.2",
+    "socket.io": "^1.4.5"
+  }
+}

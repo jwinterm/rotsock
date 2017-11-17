@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+<head>
+  <title>RotJS Test</title>
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <script src="https://ondras.github.io/rot.js/rot.js"></script>
+  <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+
+  <!-- Bootstrap -->
+  <link href="css/bootstrap.css" rel="stylesheet">
+</head>
+
+<body data-spy="scroll" data-target=".bs-docs-sidebar" data-twttr-rendered="true" style="visibility: visible;">
+
+  <div id='header'>
+    <h1> Welcome to the Dungeon of Myr </h1>
+  </div>
+  <div class'container'>
+    <div class='row-fluid'>
+      <div class='span1' id='sidebar'> 
+      </div>
+      <div class='span11' id='main'>
+      </div>
+    </div>
+  </div>
+  <div id='footer'> Connecting to server </div>
+
+  <script>
+
+  var w = 30;
+  var h = 20;
+  var display = new ROT.Display({width:w, height:h});
+  $('#main').append(display.getContainer());
+
+  var mapobject = {};
+  var map = new ROT.Map.Arena(w, h);
+  function mapobjectCallback(x, y, value) {
+    mapobject[x+","+y] = value;
+  }
+
+  var t0 = performance.now();
+  map.create(mapobjectCallback);
+  mapobject["2,4"] = 1;
+  mapobject["6,2"] = 1;
+  var t1 = performance.now();
+  console.log("Call to create map object took " + (t1 - t0) + " milliseconds.");
+
+
+   
+  var t0 = performance.now();
+  //var i, j;
+  for (var k in mapobject) {
+    var i = parseInt(k.split(",")[0]);
+    var j = parseInt(k.split(",")[1]);
+    display.draw(i, j, mapobject[k] ? '#':'.');
+  }
+  var t1 = performance.now();
+  console.log("Call to draw map took " + (t1 - t0) + " milliseconds.");
+
+  var t0 = performance.now();
+  function lightPasses (x, y) {
+    console.log("lightPasses", x, y, mapobject[x+","+y], mapobject[x+","+y] == 0);
+    if (x+","+y in mapobject) {return mapobject[x+","+y] == 0;}
+    return false;
+  }
+  var fov = new ROT.FOV.PreciseShadowcasting(lightPasses);
+  fovobject = {};
+  fov.compute(2, 2, 10, function(x, y, r, visibility) {
+    console.log("compute", x, y, r, visibility);
+    var tile = mapobject[x+","+y] ? "#" : "."
+    var ch = (r ? tile : "@");
+    var color = mapobject[x+","+y] ? '#aa0':'#660';
+    display.draw(x, y, ch, '#fff', color);
+    //console.log(x, y, ch, '#fff', color);
+  });
+
+  var t1 = performance.now();
+  console.log("Call to draw light took " + (t1 - t0) + " milliseconds.");
+
+  </script>
+
+
+</body>
+
+</html>

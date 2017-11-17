@@ -1,0 +1,47 @@
+*
+{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body
+{
+  font: 13px Helvetica, Arial;
+}
+
+h1
+{
+  color: white;
+  font-weight: bold;
+}
+
+/*#header
+{
+  height: 50px;
+  width: 100%;
+  background-color: blue;
+}*/
+
+#sidebar
+{
+  background-color: grey;
+  height: 600px;
+  padding: 0;
+  margin: 0;
+}
+
+#main
+{
+  background-color: grey;
+  height: 600px;
+  padding: 40px;
+  margin: 0;
+}
+
+/*#footer
+{
+  height: 50px;
+  width: 100%;
+  background-color: green;
+}*/

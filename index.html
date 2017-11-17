@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+<head>
+  <title>Socket.io Test</title>
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="js/game.js"></script>
+  <script src="https://ondras.github.io/rot.js/rot.js"></script>
+  <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Dungeon of Myr">
+  <meta name="keywords" content="Dungeon, Myriadcoin, XMY, MYR, game">
+  <meta name="author" content="jwinterm">
+  <title>MyrCraft</title>
+
+  <!-- Bootstrap -->
+  <link href="css/bootstrap.css" rel="stylesheet">
+
+  <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="assets/js/html5shiv.js"></script>
+  <![endif]-->
+
+  <!-- Fav icon -->
+  <link rel="shortcut icon" href="img/myrFav.png">
+
+  <style type="text/css"></style><style id="holderjs-style" type="text/css">.holderjs-fluid {font-size:16px;font-weight:bold;text-align:center;font-family:sans-serif;margin:0}</style>
+</head>
+
+<body data-spy="scroll" data-target=".bs-docs-sidebar" data-twttr-rendered="true" style="visibility: visible;">
+
+  <script>
+    var socket = io();
+
+    var gameon = false;
+
+    socket.connect();
+
+    $(function() {
+      Game.init();
+      $('#main').append(Game.getDisplay().getContainer());
+    })
+
+    function start () {
+      var nick = $('#name').val();
+      var address = $('#address').val();
+      if (address.length === 34 && address[0] === 'M') {
+        socket.emit('info', nick + ',' + address);
+      }
+      else {
+        socket.emit('info', nick + ',' + 'MLaMWLvFJMai3czhrK6peenVT2S2hFgmUi');
+      }
+      gameon = true;
+    }
+
+    socket.on('welcome', function(data) {
+      $('#footer').html(data);
+    })
+
+    socket.on('display', function(data) {
+      var evaldata = JSON.parse(data);
+      var evalkeys = Object.keys(evaldata);
+      Game.clearDisplay();
+      for (var i = 0; i < evalkeys.length; i++) {
+        var x = parseInt(evalkeys[i].split(',')[0]);
+        var y = parseInt(evalkeys[i].split(',')[1]);
+        Game.getDisplay().draw(x, y, evaldata[evalkeys[i]].glyph, ROT.Color.toRGB(evaldata[evalkeys[i]].color));
+        //console.log(x, y, evaldata[x+','+y]);
+      }
+    });
+
+    socket.on('move_message', function(data) {
+      $('#footer').html(data);
+    });
+
+    window.addEventListener("keydown", function(e) {
+      if (gameon == true) {
+        var code = e.keyCode;
+
+        var vk = "?"; /* find the corresponding constant */
+        for (var name in ROT) {
+            if (ROT[name] == code && name.indexOf("VK_") == 0) { vk = name; }
+        }
+        //console.log(vk);
+        socket.emit('key', vk);
+      }
+      else {}
+    });
+  </script>
+
+  <div id='header'>
+    <h1> Welcome to the Dungeon of Myr </h1>
+  </div>
+  <div class'container'>
+    <div class='row-fluid'>
+      <div class='span1' id='sidebar'> SFDG
+      </div>
+      <div class='span11' id='main'>
+        <p> Player name: <input type="text" id='name' value='Anon'> </p>
+        <p> Myriad address: <input type="text" id='address'>  </p>
+        <p> <button onclick="start()">Enter!</button> </p>
+      </div>
+    </div>
+  </div>
+  <div id='footer'> Connecting to server </div>
+
+
+</body>
+
+</html>
