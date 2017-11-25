@@ -4,8 +4,9 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var ROT = require('rot-js');
 
-var Map = require('./js/map.js')
-var Player = require('./js/player.js')
+var Map = require('./serverjs/map.js');
+var Player = require('./serverjs/player.js');
+var Glyph = require('./serverjs/glyph.js');
 
 app.use(express.static(__dirname)); // Current directory is root
 
@@ -21,8 +22,7 @@ var Game = {
 };
 
 var map = Map.createArena(10, 10);
-map.create(Map.arrayCallback);
-console.log(Map.maparray);
+map.consoleDisplay();
 
 function findWithAttr(array, attr, value) {
   for(var i = 0; i < array.length; i += 1) {
@@ -52,7 +52,7 @@ io.on('connection', function(socket){
 
 function pushMap() {
   for (player in Game.Players) {
-    io.to(player.id).emit("display", JSON.stringify(Map.maparray));
+    io.to(player.id).emit("display", JSON.stringify(map));
   }
 }
 // setTimeout(pushMap, 1000);

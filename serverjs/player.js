@@ -2,19 +2,23 @@
 // ============
 
   
-function createPlayer(nick, addy, id, ip) {
+function Player(nick, addy, id, ip) {
   // Setup the bookkeeping stuff
-  this.nick = nick || "Anon";
-  this.addy = addy || "MLaMWLvFJMai3czhrK6peenVT2S2hFgmUi";
-  this.id = id;
-  this.ip = ip;
-  this.jointime = Date.now();
-  this.x = 0;
-  this.y = 0;
+  this._nick = nick || "Anon";
+  this._addy = addy || "MLaMWLvFJMai3czhrK6peenVT2S2hFgmUi";
+  this._id = id;
+  this._ip = ip;
+  this._jointime = Date.now();
+  this._x = 0;
+  this._y = 0;
   return this;
 };
 
-function processInput(key) { 
+Player.prototype.getNick = function() {
+    return this._nick;
+}
+
+Player.prototype.processInput = function(key) { 
   if (key == "VK_K" || key == "VK_NUMPAD8" || key == "VK_UP") {
     dir = ROT.DIRS["8"][0];
   }
@@ -46,8 +50,7 @@ function processInput(key) {
 }
 
 module.exports = {
-  createPlayer,
-  processInput,
+  Player,
 };
 
 
