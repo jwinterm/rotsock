@@ -1,8 +1,9 @@
 // Player.js
 // ============
-
+var Entity = require('./entity.js');
+var Entities = require('./entities.js')
   
-function Player(nick, addy, id, ip) {
+function Player(nick, addy, id, ip, map) {
   // Setup the bookkeeping stuff
   this._nick = nick || "Anon";
   this._addy = addy || "MLaMWLvFJMai3czhrK6peenVT2S2hFgmUi";
@@ -11,6 +12,7 @@ function Player(nick, addy, id, ip) {
   this._jointime = Date.now();
   this._x = 0;
   this._y = 0;
+  map.addEntityAtRandomPosition(new Entity.Entity(Entities.PlayerTemplate));
   return this;
 };
 

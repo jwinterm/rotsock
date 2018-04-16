@@ -37,9 +37,9 @@ function findWithAttr(array, attr, value) {
 io.on('connection', function(socket){
     var id = socket.id;
     var ip = socket.request.connection.remoteAddress;
-    Game.Players.push(Player.createPlayer('jw', 'addy', id, ip));
+    Game.Players.push(Player.Player('jw', 'addy', id, ip, map));
     console.log("Client connected with id %s and ip %s".format(id, ip));
-    //Players.push(new Player('jw', 'addy', id, ip));
+    map.consoleDisplay();
 
     socket.on('info', function(data){
       console.log(data);

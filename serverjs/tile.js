@@ -5,18 +5,40 @@
  */
 var Glyph = require('./glyph.js');
 
-Tile = function(glyph) {
-    this._glyph = glyph;
+Tile = function(properties) {
+    properties = properties || {};
+    // Call the Glyph constructor with our properties
+    Glyph.Glyph.call(this, properties);
+    // Set up the properties. We use false by default.
+    this._walkable = properties['walkable'] || false;
+    this._diggable = properties['diggable'] || false;
+    this._blocksLight = (properties['blocksLight'] !== undefined) ?
+        properties['blocksLight'] : true;
 };
+// Make tiles inherit all the functionality from glyphs
+Tile.extend(Glyph.Glyph);
 
-Tile.prototype.getGlyph = function() {
-    return this._glyph;
-};
+// Standard getters
+Tile.prototype.isWalkable = function() {
+    return this._walkable;
+}
+Tile.prototype.isDiggable = function() {
+    return this._diggable;
+}
+Tile.prototype.isBlocksLight = function() {
+    return this._blocksLight;
+}
 
-Tile.nullTile = new Tile(new Glyph.Glyph());
-Tile.floorTile = new Tile(new Glyph.Glyph('.'));
-Tile.wallTile = new Tile(new Glyph.Glyph('#', 'goldenrod'));
-
+Tile.nullTile = new Tile({})
+Tile.floorTile = new Tile({
+    character: '.',
+    walkable: true
+});
+Tile.wallTile = new Tile({
+    character: '#',
+    foreground: 'goldenrod',
+    diggable: true
+});
 
 module.exports = {
   Tile,
